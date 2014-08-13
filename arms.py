@@ -271,11 +271,11 @@ try:
         wifpriv = b58encode(chr(128) + ("%064x" % privsec).decode('hex') + privchk)
         
         return addy, wifpriv
-
+    
 
     ##############################################################################################
     #
-    print "Please type in your \"Paper Backup Phrase\" from Armory."
+    print "Please type in your \"PrivHexBE\" from Armory that matched your PublicX and PublicY."
     print "Type in the first line, then the second line. It will ask for each line separately."
     print
     print "Also, for the second input, please paste in the \"Master Public Key\" from Electrum."
@@ -287,9 +287,11 @@ try:
     print "then clicking paste."
     print
     #
-    bckup = raw_input("Armory Backup Phrase? (1st Line) ")
+    
+    bckup = raw_input("PrivHexBE? ")
+    """bckup = raw_input("Armory Backup Phrase? (1st Line) ")
     bckup2 = raw_input("Armory Backup Phrase? (2nd Line) ")
-    bckup = bckup + " <> " + bckup2
+    bckup = bckup + " <> " + bckup2"""
     print
     #'aagh hjfj sihk ietj giik wwai awtd uodh hnji <> soss uaku egod utai itos fijj ihgi jhau jtoo'
     #'aaghhjfjsihkietjgiikwwaiawtduodhhnji <> sossuakuegodutaiitosfijjihgijhaujtoo'
@@ -300,7 +302,7 @@ try:
     ##############################################################################################
 
 
-    secpriv = int(seed_to_bin(bckup),16)
+    secpriv = int(bckup.replace(' ',''),16) #int(seed_to_bin(bckup),16)
     pt = EccMultiply(GPoint,secpriv)
     MPK = ("%064x" % pt[0]) + ("%064x" % pt[1])
     assert MPK == chkMPK, "Your MPK and the backup phrase MPK don't match."
@@ -316,6 +318,7 @@ try:
         addy, wifpriv = gen_addy_priv(MPK, secpriv, i, 1)
         print addy, wifpriv
     raw_input()
+    
 except Exception,e:
     print "ERROR: " + str(e)
     raw_input()
